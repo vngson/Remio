@@ -37,7 +37,7 @@ bạn trước ngày đó.
 
 **Tài khoản**
 
-- Đăng nhập bằng email kèm **mã OTP 6 số**, không cần mật khẩu. Người dùng cũng có thể bấm liên kết trong email.
+- Đăng nhập bằng **email + mật khẩu**. Tài khoản mới xác nhận qua email một lần; quên mật khẩu thì đăng nhập bằng **mã 6 số** gửi qua email.
 - Mọi dữ liệu cá nhân được lọc theo `user_id`, có Row Level Security làm lớp bảo vệ bổ sung.
 - Giao diện tiếng Việt, sáng/tối, tối ưu cho điện thoại.
 
@@ -47,7 +47,7 @@ bạn trước ngày đó.
 | --- | --- |
 | Framework | Next.js 16 (App Router, Cache Components) + TypeScript |
 | Giao diện | Tailwind CSS v4 · Newsreader (serif) + Be Vietnam Pro (UI) · Lucide |
-| Auth | Supabase Auth (email OTP) qua `@supabase/ssr` |
+| Auth | Supabase Auth (mật khẩu + OTP dự phòng) qua `@supabase/ssr` |
 | Database | Supabase Postgres, schema và migration bằng Drizzle ORM |
 | Email | Gmail SMTP qua Nodemailer, có lớp trừu tượng để đổi nhà cung cấp |
 | Cron | Supabase `pg_cron` + `pg_net` gọi endpoint nội bộ mỗi 15 phút |
@@ -129,12 +129,22 @@ hồ sơ khi đăng ký, và bật Row Level Security.
 > **Đừng chạy migration qua cổng 6543.** Transaction pooler không phù hợp với DDL
 > và có thể khiến `drizzle-kit migrate` treo ở dòng "applying migrations...".
 
-### 3. Đăng nhập bằng email + mã OTP
+### 3. Đăng nhập: mật khẩu là chính, mã là dự phòng
+
+Người dùng tạo tài khoản bằng email + mật khẩu, xác nhận qua email một lần, sau
+đó đăng nhập bằng mật khẩu. Tab **Mã qua email** phục vụ ba trường hợp: quên mật
+khẩu, xác nhận tài khoản, và những tài khoản chưa từng đặt mật khẩu.
+
+> Tài khoản tạo trước đây bằng mã **chưa có mật khẩu**. Cách xử lý: đăng nhập
+> bằng tab mã, rồi vào **Cài đặt → Mật khẩu đăng nhập** để đặt mật khẩu.
 
 **a. Bật provider Email** — Supabase → Authentication → Providers → **Email**.
+Đảm bảo *Enable Email provider* đang bật. Độ dài mật khẩu tối thiểu mặc định là 6
+và đổi được ở Authentication → Settings.
 
 **b. Thêm `{{ .Token }}` vào template email.** Mặc định Supabase chỉ gửi liên kết,
-không gửi mã số. Sửa cả hai template (Authentication → Email Templates):
+không gửi mã số. Mã này dùng cho đường đăng nhập không mật khẩu. Sửa cả hai
+template (Authentication → Email Templates):
 
 - **Confirm signup** — dùng khi email chưa tồn tại
 - **Magic Link** — dùng khi email đã có tài khoản
@@ -236,7 +246,7 @@ Phần âm lịch được kiểm chứng khá kỹ:
 
 **Kiểm thử thủ công**
 
-1. Vào `/login`, nhập email → nhận mã → đăng nhập.
+1. Vào `/login` → **Tạo tài khoản** bằng email + mật khẩu → xác nhận qua email → đăng nhập bằng mật khẩu.
 2. Thêm một sự kiện âm lịch với nhắc trước 1 ngày và đúng ngày.
 3. Cài đặt → **Gửi email thử** để xác nhận Gmail SMTP.
 4. Gọi thử endpoint cron:
@@ -302,8 +312,10 @@ sql/cron.sql          # Cấu hình pg_cron + pg_net
 | `ENOTFOUND` / `ETIMEDOUT` | Sai host, hoặc project Supabase đang tạm dừng. |
 | `3D000 database does not exist` | Sai tên database ở cuối URL (thường là `postgres`). |
 | Không nhận được email nhắc | Kiểm tra `GMAIL_USER` / `GMAIL_APP_PASSWORD` bằng nút **Gửi email thử**, và xem hộp thư rác. |
-| Không nhận được mã đăng nhập | Chưa thêm `{{ .Token }}` vào template *Confirm signup* và *Magic Link*. Xem [mục 3b](#3-đăng-nhập-bằng-email--mã-otp). |
+| Không nhận được mã đăng nhập | Chưa thêm `{{ .Token }}` vào template *Confirm signup* và *Magic Link*. Xem [mục 3b](#3-đăng-nhập-mật-khẩu-là-chính-mã-là-dự-phòng). |
 | Bấm gửi mã, Supabase trả `429 over_email_send_rate_limit` | Vượt hạn mức gửi email. Bật Custom SMTP và nâng *Rate limit for sending emails*. |
 | `verifyOtp` báo "Token has expired or is invalid" | Mã sai/hết hạn, hoặc email nhập khác email đã yêu cầu. Mã mặc định hiệu lực 1 giờ. |
-| Liên kết trong email trỏ về `localhost:3000` | Site URL trong Supabase vẫn là mặc định. Xem [mục 3d](#3-đăng-nhập-bằng-email--mã-otp). |
+| Đăng nhập báo "Email hoặc mật khẩu không đúng" | Tài khoản tạo bằng mã chưa có mật khẩu. Đăng nhập bằng tab **Mã qua email**, rồi đặt mật khẩu ở Cài đặt. |
+| Đăng nhập báo "Tài khoản chưa xác nhận" | Supabase đang bật xác nhận email. Mở email xác nhận, hoặc đăng nhập bằng mã. |
+| Liên kết trong email trỏ về `localhost:3000` | Site URL trong Supabase vẫn là mặc định. Xem [mục 3d](#3-đăng-nhập-mật-khẩu-là-chính-mã-là-dự-phòng). |
 | Đã cài sự kiện nhưng không có email nào | Chưa deploy hoặc chưa chạy `sql/cron.sql`. Xem [Triển khai](#triển-khai). |

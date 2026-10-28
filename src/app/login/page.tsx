@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 const FACTS = [
   "Âm lịch tự tính lại cho từng năm",
   "Nhắc qua email đúng giờ bạn chọn",
-  "Không cần mật khẩu",
+  "Đăng nhập bằng mật khẩu, không cần chờ email",
 ];
 
 function LoginShell({ children }: { children: React.ReactNode }) {
@@ -54,14 +54,15 @@ async function LoginContent({
           <span className="label-print text-ink-faint">Đăng nhập</span>
           <h1 className="text-2xl">Đăng nhập hoặc tạo tài khoản</h1>
           <p className="text-ink-soft">
-            Nhập email để nhận liên kết đăng nhập. Không cần mật khẩu.
+            Dùng email và mật khẩu. Nếu quên mật khẩu, chuyển sang tab mã qua
+            email.
           </p>
         </div>
 
         {linkFailed ? (
           <p className="rounded-slip border border-son/45 px-4 py-3 text-[0.8125rem] text-son">
-            Liên kết trong email đã hết hạn hoặc không dùng được. Nhập email bên
-            dưới để nhận liên kết mới.
+            Liên kết trong email đã hết hạn hoặc không dùng được. Hãy đăng nhập
+            bằng mật khẩu, hoặc yêu cầu gửi lại mã.
           </p>
         ) : null}
 

@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/field";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import {
   sendTestEmailAction,
   updateRemindTimeAction,
@@ -58,6 +59,99 @@ export function RemindTimeForm({ defaultValue }: { defaultValue: string }) {
             <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
           ) : null}
           Lưu giờ nhắc
+        </Button>
+      </div>
+
+      <StatusNote state={state} />
+    </form>
+  );
+}
+
+export function PasswordForm() {
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [pending, setPending] = useState(false);
+  const [state, setState] = useState<SettingsState>(IDLE);
+
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
+
+    if (password.length < 6) {
+      setState({ status: "error", message: "Mật khẩu cần ít nhất 6 ký tự." });
+      return;
+    }
+    if (password !== confirm) {
+      setState({ status: "error", message: "Hai lần nhập không khớp." });
+      return;
+    }
+
+    setPending(true);
+    setState(IDLE);
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) {
+        throw error;
+      }
+      setPassword("");
+      setConfirm("");
+      setState({
+        status: "success",
+        message:
+          "Đã lưu mật khẩu. Lần sau bạn đăng nhập bằng email và mật khẩu này.",
+      });
+    } catch (failure) {
+      setState({
+        status: "error",
+        message:
+          failure instanceof Error
+            ? failure.message
+            : "Không đặt được mật khẩu.",
+      });
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <form onSubmit={submit} className="flex flex-col gap-5">
+      <Field
+        label="Mật khẩu mới"
+        htmlFor="new-password"
+        hint="Ít nhất 6 ký tự."
+        className="sm:max-w-56"
+      >
+        <Input
+          id="new-password"
+          type="password"
+          autoComplete="new-password"
+          required
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+        />
+      </Field>
+
+      <Field
+        label="Nhập lại mật khẩu"
+        htmlFor="confirm-password"
+        className="sm:max-w-56"
+      >
+        <Input
+          id="confirm-password"
+          type="password"
+          autoComplete="new-password"
+          required
+          value={confirm}
+          onChange={(event) => setConfirm(event.target.value)}
+        />
+      </Field>
+
+      <div>
+        <Button type="submit" variant="outline" disabled={pending}>
+          {pending ? (
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+          ) : null}
+          Lưu mật khẩu
         </Button>
       </div>
 

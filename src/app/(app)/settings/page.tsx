@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { PageContainer, PageHeader } from "@/components/app/page-header";
 import { Section } from "@/components/ui/surface";
 import { requireUser } from "@/lib/auth";
-import { RemindTimeForm, TestEmailForm } from "./settings-form";
+import { PasswordForm, RemindTimeForm, TestEmailForm } from "./settings-form";
 
 export const metadata: Metadata = {
   title: "Cài đặt",
@@ -33,6 +33,17 @@ async function SettingsContent() {
         <div className="flex flex-col">
           <ReadOnlyRow label="Email nhận nhắc" value={user.email} />
           <ReadOnlyRow label="Tên hiển thị" value={user.fullName ?? "Chưa đặt"} />
+        </div>
+      </Section>
+
+      <Section title="Mật khẩu đăng nhập">
+        <div className="flex flex-col gap-5">
+          <p className="max-w-xl text-ink-soft">
+            Đặt mật khẩu để lần sau đăng nhập bằng email và mật khẩu, không phải
+            mở email lấy mã. Nếu tài khoản tạo bằng mã, đây là lần đầu bạn đặt
+            mật khẩu.
+          </p>
+          <PasswordForm />
         </div>
       </Section>
 
