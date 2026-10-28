@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Hệ màu "lịch bloc": giấy in, mực đen, và bốn màu mực dùng để đánh dấu.
+ * Màu đỏ son là màu nhấn chính, xuất hiện ít nhưng có nghĩa.
+ */
+:root {
+  --paper: oklch(0.968 0.009 82);
+  --raised: oklch(0.995 0.003 85);
+  --ink: oklch(0.215 0.012 55);
+  --ink-soft: oklch(0.5 0.014 60);
+  --ink-faint: oklch(0.655 0.012 65);
+  --rule: oklch(0.855 0.012 78);
+  --rule-strong: oklch(0.28 0.012 55);
+
+  --son: oklch(0.545 0.185 27);
+  --on-son: oklch(0.99 0.01 85);
+  --cham: oklch(0.45 0.09 268);
+  --ngoc: oklch(0.47 0.085 158);
+  --nghe: oklch(0.62 0.125 68);
+}
+
+.dark {
+  --paper: oklch(0.185 0.01 58);
+  --raised: oklch(0.228 0.012 58);
+  --ink: oklch(0.935 0.008 85);
+  --ink-soft: oklch(0.71 0.01 80);
+  --ink-faint: oklch(0.57 0.01 75);
+  --rule: oklch(0.315 0.012 62);
+  --rule-strong: oklch(0.78 0.01 80);
+
+  --son: oklch(0.635 0.16 28);
+  --on-son: oklch(0.16 0.02 40);
+  --cham: oklch(0.66 0.09 268);
+  --ngoc: oklch(0.67 0.09 158);
+  --nghe: oklch(0.76 0.12 70);
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-raised: var(--raised);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+
+  --color-son: var(--son);
+  --color-on-son: var(--on-son);
+  --color-cham: var(--cham);
+  --color-ngoc: var(--ngoc);
+  --color-nghe: var(--nghe);
+
+  --font-display: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-be-vietnam-pro), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-slip: 2px;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--son) 24%, transparent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--son);
+    outline-offset: 2px;
+  }
+
+  /* Nhãn nhỏ in hoa, dùng cho metadata kiểu bản in. */
+  .label-print {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .numeral {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "lnum" 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

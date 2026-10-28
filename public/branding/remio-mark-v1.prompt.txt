@@ -1,0 +1,7 @@
+Tool: built-in image_gen (transparent_background: true)
+Reference: remio-logo-v1.png
+
+Use case: precise-object-edit.
+Input image: sole edit target is the approved Remio brand logo. Extract the EXACT red calendar-shaped R emblem from the LEFT side, remove the Remio wordmark entirely, and present that SAME emblem alone as the website favicon source.
+Preserve the exact design silhouette, calendar binding loops, negative-space cuts, vermilion red color, and all identifying shape details. Do not redesign, reinterpret, add lettering, change the R shape, or add any new elements.
+Composition: square canvas, emblem optically centered, with about 8 percent transparent padding on all sides so it stays recognizable at 16px. Flat crisp edges, genuinely transparent background. No text, no shadows, no mockup. Only the red R calendar emblem.

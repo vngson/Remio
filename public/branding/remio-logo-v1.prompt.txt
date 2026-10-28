@@ -1,0 +1,11 @@
+Tool: built-in image_gen (transparent_background: true)
+
+Use case: logo-brand.
+Asset type: final primary logo for Remio, a Vietnamese app remembering anniversaries, birthdays and family memorial dates using solar and lunar calendars.
+Primary request: Design one refined, distinctive logo: a small vermilion red calendar-leaf emblem abstracted into an uppercase R, alongside the exact word "Remio" in near-black elegant editorial serif lettering inspired by Newsreader. The calendar/R combination must be a coherent simple symbol, not an icon with an R pasted inside. Restrained, warm, human, timeless Vietnamese printed-calendar sensibility.
+Composition: single horizontal lockup, emblem on left, wordmark on right, visually balanced with clear breathing room, large artwork occupying about 80 percent of canvas width, optically centered. Keep a compact aspect ratio around 3:1.
+Palette: vermilion red #BC3D32 emblem, warm near-black #292521 wordmark.
+Style: precise flat vector-like solid shapes, crisp contours, careful typography, reproduce cleanly in small sizes. The red calendar mark may have a single small negative-space calendar binding cue, but do not add detailed grids.
+Background: genuinely transparent alpha background.
+Text verbatim: "Remio", capital R lowercase emio. No other text.
+Avoid: gradients, shadows, 3D, mockups, paper textures, hearts, bells, stock calendar icons, decorative sparkles, presentation sheets, multiple logo alternatives, watermarks.
